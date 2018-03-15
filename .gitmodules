@@ -1,0 +1,3 @@
+[submodule "neo_python"]
+	path = neo_python
+	url = https://github.com/BlockChainStore/neo-node.git
