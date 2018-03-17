@@ -67,12 +67,7 @@ def sc_storage(event):
     if not len(event.event_payload):
         return
 
-    # The event payload list has at least one element. As developer of the smart contract
-    # you should know what data-type is in the bytes, and how to decode it. In this example,
-    # it's just a string, so we decode it with utf-8:
-    print("notify txid:", event.tx_hash)
-    print("notify block:", event.tx_hash)
-    print("notify payload:", event.event_payload)
+    
     print(str(datetime.now()))
     print("------------------------------------------------------")
     logger.info("-storage - payload:{}".format(event.event_payload))
