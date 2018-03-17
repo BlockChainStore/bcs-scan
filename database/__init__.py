@@ -3,7 +3,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from database import settings
 
-engine = create_engine('sqlite:////db/bcs-db.db3', convert_unicode=True)
+engine = create_engine('sqlite:///db/bcs-db.db3', convert_unicode=True)
 #engine = create_engine(settings.db_path, convert_unicode=settings.convert_unicode)
 session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
