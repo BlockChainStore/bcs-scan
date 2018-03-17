@@ -45,7 +45,8 @@ def sc_notify(event):
     event_data.param2 = node.toAddr(event.event_payload[2])
     event_data.param3 = str( int.from_bytes(event.event_payload[3],'little') )
     event_data.execution_success = event.execution_success
-    event_data.timestamp = datetime.now()
+    #event_data.timestamp = datetime.now()
+    event_data.timestamp = datetime.utcnow()
     
     if not session.query(Event).filter(Event.tx_hash == event_data.tx_hash).count():
         print("Adding to database")
@@ -54,7 +55,7 @@ def sc_notify(event):
     else :
         print("Already have a transection")
 
-    print('Time:',str(datetime.now()))
+    print('Time:',str(datetime.utcnow()))
     print("------------------------------------------------------")
     logger.info("-event:{} - payload:{}".format(event.event_type,event.event_payload))
 
@@ -84,7 +85,8 @@ def sc_storage(event):
             print('Updateing key')
 
             storage_data.data = data
-            storage_data.last_changed = datetime.now()
+            storage_data.last_changed = datetime.utcnow()
+            #storage_data.last_changed = datetime.now()
 
             session.commit()
 
@@ -95,12 +97,13 @@ def sc_storage(event):
             storage_data = Storage()
             storage_data.key = key
             storage_data.data = data
-            storage_data.last_changed = datetime.now()
+            storage_data.last_changed = datetime.utcnow()
+            #storage_data.last_changed = datetime.now()
 
             session.add(storage_data)
             session.commit()
         
-        print('Time:',str(datetime.now()))
+        print('Time:',str(datetime.utcnow()))
         print("------------------------------------------------------")
 
     logger.info("-event:{} - payload:{}".format(event.event_type,event.event_payload))
