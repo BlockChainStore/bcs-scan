@@ -74,14 +74,22 @@ def sc_storage(event):
         #spilting key and data
 
         payload = event.event_payload[0].split()
-        key = str(payload[0])
-        data = str(payload[2])
+
+        key = payload[0]
+        data = payload[2]
+
+        if "b'" in key:
+            key = eval(key).decode('utf-8')
+
+        if "b'" in data:
+            data = int.from_bytes( eval(data),'little' )
+            data = str(data)
 
         print('Key:',key,' Data:',data)
        
         if not len(key) == neo_addr_length :
             print('address invalid')
-            return        
+            return
 
         storage_data = session.query(Storage).filter(Storage.key == key).first()
         #update key case
