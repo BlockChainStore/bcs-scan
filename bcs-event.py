@@ -84,7 +84,7 @@ def sc_storage(event):
             print('Updateing key')
 
             storage_data.data = data
-            storage_data.last_changed = str(datetime.now())
+            storage_data.last_changed = datetime.now()
 
             session.commit()
 
@@ -95,7 +95,7 @@ def sc_storage(event):
             storage_data = Storage()
             storage_data.key = key
             storage_data.data = data
-            storage_data.last_changed = str(datetime.now())
+            storage_data.last_changed = datetime.now()
 
             session.add(storage_data)
             session.commit()
