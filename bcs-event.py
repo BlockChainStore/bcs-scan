@@ -36,12 +36,12 @@ def sc_notify(event):
     # you should know what data-type is in the bytes, and how to decode it. In this example,
     # it's just a string, so we decode it with utf-8:
     event_data=Event()
-    event_data.event_type = event.event_type
-    event_data.tx_hash = event.tx_hash
+    event_data.event_type = str(event.event_type)
+    event_data.tx_hash = str(event.tx_hash)
     event_data.block_number = event.block_number
     event_data.method = event.event_payload[0].decode("utf-8")
-    event_data.param1 = str(event.event_payload[1])
-    event_data.param2 = str(event.event_payload[2])
+    event_data.param1 = node.toAddr(event.event_payload[1])
+    event_data.param2 = node.toAddr(event.event_payload[2])
     event_data.param3 = str( int.from_bytes(event.event_payload[3],'little') )
     event_data.execution_success = event.execution_success
     event_data.timestamp = datetime.now()
