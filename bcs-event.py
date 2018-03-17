@@ -46,8 +46,12 @@ def sc_notify(event):
     event_data.execution_success = event.execution_success
     event_data.timestamp = datetime.now()
     
-    session.add(event_data)
-    session.commit()
+    if not session.query(Event).filter(Event.tx_hash == event_data.tx_hash).count():
+        session.add(event_data)
+        session.commit()
+    else :
+        print("already have a transection")
+
     print("notify txid:", event.tx_hash)
     print("notify block:", event.tx_hash)
     print("notify payload:", event.event_payload)
