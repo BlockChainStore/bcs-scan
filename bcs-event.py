@@ -26,7 +26,7 @@ node = neoBlockchain(contract_sh,mainnet=True)
 
 @node.smart_contract.on_notify
 def sc_notify(event):
-    print("SmartContract Runtime.Notify event:", event)
+    print("SmartContract Event:", event)
     print("------------------------------------------------------")
 
     # Make sure that the event payload list has at least one element.
@@ -60,7 +60,7 @@ def sc_notify(event):
 
 @node.smart_contract.on_storage
 def sc_storage(event):
-    print("SmartContract Runtime.Notify event:", event)
+    print("SmartContract Event:", event)
 
     # Make sure that the event payload list has at least one element.
     if not len(event.event_payload):
