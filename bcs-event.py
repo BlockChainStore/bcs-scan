@@ -27,6 +27,7 @@ node = neoBlockchain(contract_sh,mainnet=True)
 @node.smart_contract.on_notify
 def sc_notify(event):
     print("SmartContract Runtime.Notify event:", event)
+    print("------------------------------------------------------")
 
     # Make sure that the event payload list has at least one element.
     if not len(event.event_payload):
@@ -47,17 +48,15 @@ def sc_notify(event):
     event_data.timestamp = datetime.now()
     
     if not session.query(Event).filter(Event.tx_hash == event_data.tx_hash).count():
+        print("Adding to database")
         session.add(event_data)
         session.commit()
     else :
-        print("already have a transection")
+        print("Already have a transection")
 
-    print("notify txid:", event.tx_hash)
-    print("notify block:", event.tx_hash)
-    print("notify payload:", event.event_payload)
-    print(str(datetime.now()))
+    print('Time:',str(datetime.now()))
     print("------------------------------------------------------")
-    logger.info("-notify - payload:{}".format(event.event_payload))
+    logger.info("-event:{} - payload:{}".format(event.event_type,event.event_payload))
 
 @node.smart_contract.on_storage
 def sc_storage(event):
@@ -67,10 +66,44 @@ def sc_storage(event):
     if not len(event.event_payload):
         return
 
-    
-    print(str(datetime.now()))
-    print("------------------------------------------------------")
-    logger.info("-storage - payload:{}".format(event.event_payload))
+    if (event.execution_success and (event.event_type == 'SmartContract.Storage.Put') ) :
+
+        print("------------------------------------------------------")
+        #spilting key and data
+
+        payload = event.event_payload[0].split()
+
+        key = str(payload[0])
+        data = str(payload[2])
+
+        print('Key:',key,' Data:',data)
+
+        storage_data = session.query(Storage).filter(Storage.key == key).first()
+        #update key case
+        if not (storage_data == None) :
+            print('Updateing key')
+
+            storage_data.data = data
+            storage_data.last_changed = str(datetime.now())
+
+            session.commit()
+
+        #create new key
+        else :
+            print('Adding new key')
+
+            storage_data = Storage()
+            storage_data.key = key
+            storage_data.data = data
+            storage_data.last_changed = str(datetime.now())
+
+            session.add(storage_data)
+            session.commit()
+        
+        print('Time:',str(datetime.now()))
+        print("------------------------------------------------------")
+
+    logger.info("-event:{} - payload:{}".format(event.event_type,event.event_payload))
 
 
 def background():
