@@ -116,10 +116,11 @@ def main():
     bg = threading.Thread(target=background)
     bg.setDaemon(True)
     bg.start()
-    
+    logger.info("BCS Event Starting.."))
     node.start()
     reactor.suggestThreadPoolSize(15)
     reactor.run()
+    logger.info("Shutting down.."))
 
 if __name__ == '__main__':
     main()
