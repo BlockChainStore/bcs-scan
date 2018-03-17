@@ -20,6 +20,7 @@ from database.schema import Event , Storage
 logzero.logfile("/var/log/neo/neo-contract-event.log", maxBytes=1e6, backupCount=3)
 contract_sh = '546c5872a992b2754ef327154f4c119baabff65f'
 #contract_sh = 'e81c837d37763afbf894d319c868a09f219f2be9'    #testnet contract
+neo_addr_length=34
 
 node = neoBlockchain(contract_sh,mainnet=True)
 
@@ -67,17 +68,20 @@ def sc_storage(event):
     if not len(event.event_payload):
         return
 
-    if (event.execution_success or (str(event.event_type) == 'SmartContract.Storage.Put') ) :
+    if (event.execution_success or (str(event.event_type) == 'SmartContract.Storage.Put') and (event.test_mode==False) ) :
 
         print("------------------------------------------------------")
         #spilting key and data
 
         payload = event.event_payload[0].split()
-
         key = str(payload[0])
         data = str(payload[2])
 
         print('Key:',key,' Data:',data)
+       
+        if not len(key) == neo_addr_length :
+            print('address invalid')
+            return        
 
         storage_data = session.query(Storage).filter(Storage.key == key).first()
         #update key case
