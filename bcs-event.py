@@ -66,7 +66,7 @@ def sc_storage(event):
     if not len(event.event_payload):
         return
 
-    if (event.execution_success and (event.event_type == 'SmartContract.Storage.Put') ) :
+    if (event.execution_success or (str(event.event_type) == 'SmartContract.Storage.Put') ) :
 
         print("------------------------------------------------------")
         #spilting key and data
