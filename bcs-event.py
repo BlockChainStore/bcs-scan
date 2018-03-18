@@ -68,6 +68,30 @@ def sc_storage(event):
     if not len(event.event_payload):
         return
 
+    if (event.execution_success or (str(event.event_type) == 'SmartContract.Storage.Delete') and (event.test_mode==False) ) :
+        print("------------------------------------------------------")
+
+        key = event.event_payload[0]
+        if "b'" in key:
+            key = eval(key).decode('utf-8')
+
+        if not len(key) == neo_addr_length :
+            print('address invalid')
+            return
+
+        storage_data = session.query(Storage).filter(Storage.key == key).first()
+        if not (storage_data == None) :
+            print('Updateing key {} to 0'.format(key))
+
+            storage_data.data = '0'
+            storage_data.last_changed = datetime.utcnow()
+            #storage_data.last_changed = datetime.now()
+
+            session.commit()
+
+        print('Time:',str(datetime.utcnow()))
+        print("------------------------------------------------------")
+
     if (event.execution_success or (str(event.event_type) == 'SmartContract.Storage.Put') and (event.test_mode==False) ) :
 
         print("------------------------------------------------------")
