@@ -1,7 +1,3 @@
-from neo_node.config.config import neo_python_path
-import sys
-sys.path.append(neo_python_path)
-
 import threading
 import argparse
 import json
@@ -17,12 +13,12 @@ from neo_node.neoNode import neoBlockchain
 from database import session
 from database.schema import Event , Storage
 
-logzero.logfile("/var/log/neo/neo-contract-event.log", maxBytes=1e6, backupCount=3)
-contract_sh = '546c5872a992b2754ef327154f4c119baabff65f'
+logzero.logfile("/var/log/neo/testnet/neo-contract-event.log", maxBytes=1e6, backupCount=10)
+#contract_sh = '546c5872a992b2754ef327154f4c119baabff65f'    #mainnet token
 #contract_sh = 'e81c837d37763afbf894d319c868a09f219f2be9'    #testnet contract
 neo_addr_length=34
 
-node = neoBlockchain(contract_sh,mainnet=True)
+node = neoBlockchain(contract_sh)
 
 
 @node.smart_contract.on_notify
