@@ -52,9 +52,21 @@ def sc_notify(event):
         pass
 
     elif (event_data.method == 'tranfer'):
-        event_data.param1 = node.toAddr(event.event_payload[1])
-        event_data.param2 = node.toAddr(event.event_payload[2])
-        event_data.param3 = str( int.from_bytes(event.event_payload[3],'little') )
+        print("Tranfer")
+        try:
+            event_data.param1 = node.toAddr(event.event_payload[1])
+        except:
+            event_data.param1 = event.event_payload[1]
+
+        try:
+            event_data.param2 = node.toAddr(event.event_payload[2])
+        except:
+            event_data.param2 = event.event_payload[2]
+
+        try:
+            event_data.param3 = str( int.from_bytes(event.event_payload[3],'little') )
+        except:
+            event_data.param3 = str(event.event_payload[3])
 
     event_data.execution_success = event.execution_success
     #event_data.timestamp = datetime.now()
