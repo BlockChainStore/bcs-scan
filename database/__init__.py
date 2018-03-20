@@ -17,6 +17,10 @@ def init_db():
     # they will be registered properly on the metadata.  Otherwise
     # you will have to import them first before calling init_db()
     from database.schema import Event ,Storage
+    import os
+    if not os.path.exists(settings.db_dir):
+        os.makedirs(settings.db_dir)
+
     from sqlalchemy_utils import database_exists, create_database
     if not database_exists(engine.url):
         create_database(engine.url)

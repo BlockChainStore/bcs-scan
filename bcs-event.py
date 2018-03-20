@@ -15,7 +15,7 @@ from database.schema import Event , Storage
 
 logzero.logfile("/var/log/neo/testnet/neo-contract-event.log", maxBytes=1e6, backupCount=10)
 #contract_sh = '546c5872a992b2754ef327154f4c119baabff65f'    #mainnet token
-#contract_sh = 'e81c837d37763afbf894d319c868a09f219f2be9'    #testnet contract
+contract_sh = '68e78b7f4afd025a461d5b860ab9a11f57b13589'    #testnet contract
 neo_addr_length=34
 
 node = neoBlockchain(contract_sh)
@@ -38,9 +38,12 @@ def sc_notify(event):
     event_data.tx_hash = str(event.tx_hash)
     event_data.block_number = event.block_number
     event_data.method = event.event_payload[0].decode("utf-8")
-    event_data.param1 = node.toAddr(event.event_payload[1])
-    event_data.param2 = node.toAddr(event.event_payload[2])
-    event_data.param3 = str( int.from_bytes(event.event_payload[3],'little') )
+    if (event_data.method == 'deploy'):
+        pass
+    elif (event_data.method == 'tranfer'):
+        event_data.param1 = node.toAddr(event.event_payload[1])
+        event_data.param2 = node.toAddr(event.event_payload[2])
+        event_data.param3 = str( int.from_bytes(event.event_payload[3],'little') )
     event_data.execution_success = event.execution_success
     #event_data.timestamp = datetime.now()
     event_data.timestamp = datetime.utcnow()
@@ -99,18 +102,25 @@ def sc_storage(event):
         data = payload[2]
 
         if "b'" in key:
-            key = eval(key).decode('utf-8')
+            try:
+                key = eval(key).decode('utf-8')
+            except:
+                print('Invalid Key')
+                return
 
         if "b'" in data:
-            data = int.from_bytes( eval(data),'little' )
-            data = str(data)
+            try:
+                data = int.from_bytes( eval(data),'little' )
+                data = str(data)
+            except:
+                print('Invalid Key')
+                return
 
         print('Key:',key,' Data:',data)
        
         if not len(key) == neo_addr_length :
             print('address invalid')
-            return
-
+        
         storage_data = session.query(Storage).filter(Storage.key == key).first()
         #update key case
         if not (storage_data == None) :
