@@ -51,7 +51,7 @@ def sc_notify(event):
     elif (event_data.method == 'crowdsale_available'):
         pass
 
-    elif (event_data.method == 'tranfer'):
+    elif (event_data.method == 'transfer'):
         print("Tranfer")
         try:
             event_data.param1 = node.toAddr(event.event_payload[1])
