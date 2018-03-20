@@ -40,10 +40,22 @@ def sc_notify(event):
     event_data.method = event.event_payload[0].decode("utf-8")
     if (event_data.method == 'deploy'):
         pass
+
+    elif (event_data.method == 'circulation'):
+        pass
+
+    elif (event_data.method == 'mintTokens'):
+        print("mintTokens payload:",event.event_payload)
+        pass
+
+    elif (event_data.method == 'crowdsale_available'):
+        pass
+
     elif (event_data.method == 'tranfer'):
         event_data.param1 = node.toAddr(event.event_payload[1])
         event_data.param2 = node.toAddr(event.event_payload[2])
         event_data.param3 = str( int.from_bytes(event.event_payload[3],'little') )
+
     event_data.execution_success = event.execution_success
     #event_data.timestamp = datetime.now()
     event_data.timestamp = datetime.utcnow()
@@ -72,11 +84,15 @@ def sc_storage(event):
 
         key = event.event_payload[0]
         if "b'" in key:
-            key = eval(key).decode('utf-8')
+            try:
+                key = eval(key).decode('utf-8')
+            except:
+                print('Invalid Key')
+                print("------------------------------------------------------")
+                return
 
         if not len(key) == neo_addr_length :
-            print('address invalid')
-            return
+            print('key is not an address')
 
         storage_data = session.query(Storage).filter(Storage.key == key).first()
         if not (storage_data == None) :
@@ -106,6 +122,8 @@ def sc_storage(event):
                 key = eval(key).decode('utf-8')
             except:
                 print('Invalid Key')
+                print("------------------------------------------------------")
+
                 return
 
         if "b'" in data:
@@ -113,13 +131,14 @@ def sc_storage(event):
                 data = int.from_bytes( eval(data),'little' )
                 data = str(data)
             except:
-                print('Invalid Key')
+                print('Invalid data')
+                print("------------------------------------------------------")
                 return
 
         print('Key:',key,' Data:',data)
        
         if not len(key) == neo_addr_length :
-            print('address invalid')
+            print('key is not an address')
         
         storage_data = session.query(Storage).filter(Storage.key == key).first()
         #update key case
