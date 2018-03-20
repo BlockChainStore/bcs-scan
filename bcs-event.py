@@ -39,6 +39,7 @@ def sc_notify(event):
     event_data.block_number = event.block_number
     event_data.method = event.event_payload[0].decode("utf-8")
     if (event_data.method == 'deploy'):
+        print("Deploying Smart contract")
         pass
 
     elif (event_data.method == 'circulation'):
