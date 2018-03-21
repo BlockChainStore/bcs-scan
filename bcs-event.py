@@ -71,7 +71,7 @@ def sc_storage(event):
     if (event.execution_success or (str(event.event_type) == 'SmartContract.Storage.Delete') and (event.test_mode==False) ) :
         print("------------------------------------------------------")
 
-        key = event.event_payload[0]
+        key = event.event_payload[0].replace(" ", "")
         if "b'" in key:
             key = eval(key).decode('utf-8')
 
@@ -99,7 +99,7 @@ def sc_storage(event):
 
         payload = event.event_payload[0].split()
 
-        key = payload[0]
+        key = payload[0].replace(" ", "")
         data = payload[2]
 
         if "b'" in key:
