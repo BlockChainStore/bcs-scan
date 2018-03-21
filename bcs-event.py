@@ -12,13 +12,12 @@ from neo_node.neoNode import neoBlockchain
 
 from database import session
 from database.schema import Event , Storage
+from config import config
 
-logzero.logfile("/var/log/neo/testnet/neo-contract-event.log", maxBytes=1e6, backupCount=10)
-#contract_sh = '546c5872a992b2754ef327154f4c119baabff65f'    #mainnet token
-contract_sh = '68e78b7f4afd025a461d5b860ab9a11f57b13589'    #testnet contract
-neo_addr_length=34
+logzero.logfile(config.logfile, maxBytes=1e6,backupCount=config.backupCount)
+neo_addr_length=config.neo_addr_length
 
-node = neoBlockchain(contract_sh)
+node = neoBlockchain(config.contract_sh,mainnet=config.mainnet)
 
 
 @node.smart_contract.on_notify
